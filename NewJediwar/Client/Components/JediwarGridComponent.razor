@@ -225,49 +225,41 @@
     private void MoveUp()
     {
         grid.MoveCharacter(playerCharacter, -1, 0);
-        StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private void MoveUpRight()
     {
         grid.MoveCharacter(playerCharacter, -1, 1);
-        StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private void MoveUpLeft()
     {
         grid.MoveCharacter(playerCharacter, -1, -1);
-        StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private void MoveDown()
     {
         grid.MoveCharacter(playerCharacter, 1, 0);
-        StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private void MoveDownRight()
     {
         grid.MoveCharacter(playerCharacter, 1, 1);
-        StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private void MoveDownLeft()
     {
         grid.MoveCharacter(playerCharacter, 1, -1);
-        StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private void MoveLeft()
     {
         grid.MoveCharacter(playerCharacter, 0, -1);
-        StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private void MoveRight()
     {
         grid.MoveCharacter(playerCharacter, 0, 1);
-        StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private string GetImageSource(JediwarCell cell)
