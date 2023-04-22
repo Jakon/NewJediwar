@@ -15,4 +15,10 @@
     <ProjectReference Include="..\Shared\NewJediwar.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\images\eau.png" />
+    <None Include="wwwroot\images\herbe.png" />
+    <None Include="wwwroot\images\terre.png" />
+  </ItemGroup>
+
 </Project>

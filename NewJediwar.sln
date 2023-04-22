@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewJediwar.Server", "NewJediwar\Server\NewJediwar.Server.csproj", "{36AC97C7-3384-4628-A111-592B85C999E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewJediwar.Server", "NewJediwar\Server\NewJediwar.Server.csproj", "{36AC97C7-3384-4628-A111-592B85C999E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewJediwar.Client", "NewJediwar\Client\NewJediwar.Client.csproj", "{7F65017F-83B9-4A22-892E-C3E76F05E3A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewJediwar.Client", "NewJediwar\Client\NewJediwar.Client.csproj", "{7F65017F-83B9-4A22-892E-C3E76F05E3A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewJediwar.Shared", "NewJediwar\Shared\NewJediwar.Shared.csproj", "{52BE583B-CFAF-4256-B9A3-D519BCB3DD27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewJediwar.Shared", "NewJediwar\Shared\NewJediwar.Shared.csproj", "{52BE583B-CFAF-4256-B9A3-D519BCB3DD27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

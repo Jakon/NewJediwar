@@ -3,32 +3,46 @@
 <style>
     .grid {
         display: grid;
-        grid-template-columns: repeat(@grid.VisibleColumns, @($"{grid.CellSize}px"));
-        grid-template-rows: repeat(@grid.VisibleRows, @($"{grid.CellSize}px"));
+        grid-template-columns: repeat(@playerCharacter.VisionScope*2 + 2, @($"{grid.CellSize}px"));
+        grid-template-rows: repeat(@playerCharacter.VisionScope*2 + 2, @($"{grid.CellSize}px"));
         width: fit-content;
-        width: @($"{grid.CellSize * (grid.VisibleColumns)}px");
-        height: @($"{grid.CellSize * (grid.VisibleRows)}px");
+        width: @($"{grid.CellSize * (playerCharacter.VisionScope * 2 + 2)}px");
+        height: @($"{grid.CellSize * (playerCharacter.VisionScope * 2 + 2)}px");
         position: relative;
     }
 
+    /*.grid-global {
+        display: grid;
+        grid-template-columns: repeat(@grid.Columns+1, @($"{grid.CellSize}px"));
+        grid-template-rows: repeat(@grid.Rows, @($"{grid.CellSize}px"));
+        width: fit-content;
+        width: @($"{grid.CellSize * (grid.Columns + 1)}px");
+        height: @($"{grid.CellSize * (grid.Rows + 1)}px");
+        position: relative;
+        margin-bottom: 50px;
+    }*/
+
     .cell {
-        width: @grid.CellSizeString;
-        height: @grid.CellSizeString;
+        width: @($"{grid.CellSize}px");
+        height: @($"{grid.CellSize}px");
         border: 1px solid #ccc;
         padding: 0px;
+        display: inline-block;
+        position: relative;
     }
 
     .cell-header {
         background-color: #f1f1f1;
-        width: @grid.CellSizeString;
-        height: @grid.CellSizeString;
+        width: @($"{grid.CellSize}px");
+        height: @($"{grid.CellSize}px");
         border: 1px solid #ccc;
     }
 
     .character {
-        /* Ajoutez du style pour les personnages ici */
+        position: absolute;
+        top: 0;
+        left: 0;
     }
-
 
     .rose-des-vents {
         display: flex;
@@ -99,10 +113,46 @@
     .cell-x {
         top: 0;
         right: 0;
-        ;
     }
-
 </style>
+
+@*<div class="grid-global">
+    <!-- Ajout de l'en-tête pour les colonnes -->
+    <div class="row">
+        <div class="cell-header">
+            <div class="cell-x">x</div>
+            <div class="cell-y">y</div>
+        </div>
+        @for (int colHeader = 0; colHeader < grid.Columns; colHeader++)
+        {
+            <div class="cell-header">x=@colHeader</div>
+        }
+    </div>
+
+    @for (int row = 0; row < grid.Rows; row++)
+    {
+        <!-- Ajout de l'en-tête pour les lignes -->
+        <div class="row">
+            <div class="cell-header">y=@row</div>
+
+            @for (int col = 0; col < grid.Columns; col++)
+            {
+                var character = grid.Characters.FirstOrDefault(c => c.Column == col && c.Row == row);
+                <div class="cell">
+                    <img src="@GetImageSource(grid.Cells[row, col])" alt="@grid.Cells[row, col].Environnment.Name" />
+
+                    @if (character != null)
+                    {
+                        <img class="character" src="images/jedi.png" alt="@playerCharacter.Name" />
+                    }
+
+                </div>
+            }
+        </div>
+    }
+</div>*@
+
+<h1>La vue joueur</h1>
 
 <div class="grid">
     <!-- Ajout de l'en-tête pour les colonnes -->
@@ -113,39 +163,37 @@
         </div>
         @for (int colHeader = -playerCharacter.VisionScope; colHeader <= playerCharacter.VisionScope; colHeader++)
         {
-            var yRelatif = (playerCharacter.Y + colHeader + grid.Columns) % grid.Columns;
-            <div class="cell-header">@yRelatif</div>
+            var xRelatif = (playerCharacter.Column + colHeader + grid.Columns) % grid.Columns;
+            <div class="cell-header">x=@xRelatif</div>
         }
     </div>
 
     @for (int row = -playerCharacter.VisionScope; row <= playerCharacter.VisionScope; row++)
     {
-        var xRelatif = (playerCharacter.X + row + grid.Rows) % grid.Rows;
+        var rowRelatif = (playerCharacter.Row + row + grid.Rows) % grid.Rows;
 
         <!-- Ajout de l'en-tête pour les lignes -->
         <div class="row">
-            <div class="cell-header">@xRelatif</div>
+            <div class="cell-header">y=@rowRelatif</div>
 
             @for (int col = -playerCharacter.VisionScope; col <= playerCharacter.VisionScope; col++)
             {
-                var yRelatif = (playerCharacter.Y + col + grid.Columns) % grid.Columns;
+                var colonneRelatif = (playerCharacter.Column + col + grid.Columns) % grid.Columns;
 
-                var character = grid.Characters.FirstOrDefault(c => c.X == xRelatif && c.Y == yRelatif);
+                var character = grid.Characters.FirstOrDefault(c => c.Column == colonneRelatif && c.Row == rowRelatif);
                 <div class="cell">
+                    <img src="@GetImageSource(grid.Cells[rowRelatif, colonneRelatif])" alt="@grid.Cells[rowRelatif, colonneRelatif].Environnment.Name" />
+
                     @if (character != null)
                     {
-                        <div class="character">@character.Name</div>
+                        <img class="character" src="images/jedi.png" alt="@playerCharacter.Name" />
                     }
-                    else
-                    {
-                        @($"({xRelatif}, {yRelatif})")
-                    }
+
                 </div>
             }
         </div>
     }
 </div>
-
 
 <div class="rose-des-vents">
     <div class="direction north" @onclick="MoveUp"><i class="fas fa-arrow-up"></i></div>
@@ -168,24 +216,21 @@
     {
         grid = new JediwarGrid(20, 20, 75);
 
-        playerCharacter = new JediwarCharacter("Jakon67", 1, 1, 2);
+        JediwarInitGame.InitGrid(grid);
+
+        playerCharacter = new JediwarCharacter("Jakon67", 3, 1, 4);
         grid.Characters.Add(playerCharacter);
-
-        // Ajout de personnages à la grille
-        grid.Characters.Add(new JediwarCharacter("Jedi 2", 9, 9));
-
-        var t = grid.GetVisibleCells(playerCharacter);
     }
 
     private void MoveUp()
     {
-        grid.MoveCharacter(playerCharacter, 0, -1);
+        grid.MoveCharacter(playerCharacter, -1, 0);
         StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private void MoveUpRight()
     {
-        grid.MoveCharacter(playerCharacter, 1, -1);
+        grid.MoveCharacter(playerCharacter, -1, 1);
         StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
@@ -197,7 +242,7 @@
 
     private void MoveDown()
     {
-        grid.MoveCharacter(playerCharacter, 0, 1);
+        grid.MoveCharacter(playerCharacter, 1, 0);
         StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
@@ -209,19 +254,24 @@
 
     private void MoveDownLeft()
     {
-        grid.MoveCharacter(playerCharacter, -1, 1);
+        grid.MoveCharacter(playerCharacter, 1, -1);
         StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private void MoveLeft()
     {
-        grid.MoveCharacter(playerCharacter, -1, 0);
+        grid.MoveCharacter(playerCharacter, 0, -1);
         StateHasChanged(); // Force la mise à jour de l'affichage
     }
 
     private void MoveRight()
     {
-        grid.MoveCharacter(playerCharacter, 1, 0);
+        grid.MoveCharacter(playerCharacter, 0, 1);
         StateHasChanged(); // Force la mise à jour de l'affichage
+    }
+
+    private string GetImageSource(JediwarCell cell)
+    {
+        return $"images/{cell.Environnment.TextureName}";
     }
 }
