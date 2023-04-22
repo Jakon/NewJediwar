@@ -1,0 +1,227 @@
+﻿@using NewJediwar.Shared;
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(@grid.VisibleColumns, @($"{grid.CellSize}px"));
+        grid-template-rows: repeat(@grid.VisibleRows, @($"{grid.CellSize}px"));
+        width: fit-content;
+        width: @($"{grid.CellSize * (grid.VisibleColumns)}px");
+        height: @($"{grid.CellSize * (grid.VisibleRows)}px");
+        position: relative;
+    }
+
+    .cell {
+        width: @grid.CellSizeString;
+        height: @grid.CellSizeString;
+        border: 1px solid #ccc;
+        padding: 0px;
+    }
+
+    .cell-header {
+        background-color: #f1f1f1;
+        width: @grid.CellSizeString;
+        height: @grid.CellSizeString;
+        border: 1px solid #ccc;
+    }
+
+    .character {
+        /* Ajoutez du style pour les personnages ici */
+    }
+
+
+    .rose-des-vents {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        width: 200px;
+        height: 200px;
+    }
+
+    .direction {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        cursor: pointer;
+        user-select: none;
+        color: #ff5722; /* Couleur vive */
+        /* color: #8b4513; */ /* Couleur neutre */
+        font-size: 3rem;
+    }
+
+    .north {
+        top: 0;
+    }
+
+    .east {
+        right: 0;
+    }
+
+    .south {
+        bottom: 0;
+    }
+
+    .west {
+        left: 0;
+    }
+
+    .north-east {
+        top: 0;
+        right: 0;
+        transform: rotate(45deg);
+    }
+
+    .south-east {
+        bottom: 0;
+        right: 0;
+        transform: rotate(-45deg);
+    }
+
+    .south-west {
+        bottom: 0;
+        left: 0;
+        transform: rotate(45deg);
+    }
+
+    .north-west {
+        top: 0;
+        left: 0;
+        transform: rotate(-45deg);
+    }
+
+    .cell-y {
+        bottom: 0;
+        left: 0;
+    }
+
+    .cell-x {
+        top: 0;
+        right: 0;
+        ;
+    }
+
+</style>
+
+<div class="grid">
+    <!-- Ajout de l'en-tête pour les colonnes -->
+    <div class="row">
+        <div class="cell-header">
+            <div class="cell-x">x</div>
+            <div class="cell-y">y</div>
+        </div>
+        @for (int colHeader = -playerCharacter.VisionScope; colHeader <= playerCharacter.VisionScope; colHeader++)
+        {
+            var yRelatif = (playerCharacter.Y + colHeader + grid.Columns) % grid.Columns;
+            <div class="cell-header">@yRelatif</div>
+        }
+    </div>
+
+    @for (int row = -playerCharacter.VisionScope; row <= playerCharacter.VisionScope; row++)
+    {
+        var xRelatif = (playerCharacter.X + row + grid.Rows) % grid.Rows;
+
+        <!-- Ajout de l'en-tête pour les lignes -->
+        <div class="row">
+            <div class="cell-header">@xRelatif</div>
+
+            @for (int col = -playerCharacter.VisionScope; col <= playerCharacter.VisionScope; col++)
+            {
+                var yRelatif = (playerCharacter.Y + col + grid.Columns) % grid.Columns;
+
+                var character = grid.Characters.FirstOrDefault(c => c.X == xRelatif && c.Y == yRelatif);
+                <div class="cell">
+                    @if (character != null)
+                    {
+                        <div class="character">@character.Name</div>
+                    }
+                    else
+                    {
+                        @($"({xRelatif}, {yRelatif})")
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+
+<div class="rose-des-vents">
+    <div class="direction north" @onclick="MoveUp"><i class="fas fa-arrow-up"></i></div>
+    <div class="direction east" @onclick="MoveRight"><i class="fas fa-arrow-right"></i></div>
+    <div class="direction south" @onclick="MoveDown"><i class="fas fa-arrow-down"></i></div>
+    <div class="direction west" @onclick="MoveLeft"><i class="fas fa-arrow-left"></i></div>
+    <div class="direction north-east" @onclick="MoveUpRight"><i class="fas fa-arrow-up"></i></div>
+    <div class="direction south-east" @onclick="MoveDownRight"><i class="fas fa-arrow-down"></i></div>
+    <div class="direction south-west" @onclick="MoveDownLeft"><i class="fas fa-arrow-down"></i></div>
+    <div class="direction north-west" @onclick="MoveUpLeft"><i class="fas fa-arrow-up"></i></div>
+</div>
+
+
+
+@code {
+    private JediwarGrid grid;
+    private JediwarCharacter playerCharacter;
+
+    protected override void OnInitialized()
+    {
+        grid = new JediwarGrid(20, 20, 75);
+
+        playerCharacter = new JediwarCharacter("Jakon67", 1, 1, 2);
+        grid.Characters.Add(playerCharacter);
+
+        // Ajout de personnages à la grille
+        grid.Characters.Add(new JediwarCharacter("Jedi 2", 9, 9));
+
+        var t = grid.GetVisibleCells(playerCharacter);
+    }
+
+    private void MoveUp()
+    {
+        grid.MoveCharacter(playerCharacter, 0, -1);
+        StateHasChanged(); // Force la mise à jour de l'affichage
+    }
+
+    private void MoveUpRight()
+    {
+        grid.MoveCharacter(playerCharacter, 1, -1);
+        StateHasChanged(); // Force la mise à jour de l'affichage
+    }
+
+    private void MoveUpLeft()
+    {
+        grid.MoveCharacter(playerCharacter, -1, -1);
+        StateHasChanged(); // Force la mise à jour de l'affichage
+    }
+
+    private void MoveDown()
+    {
+        grid.MoveCharacter(playerCharacter, 0, 1);
+        StateHasChanged(); // Force la mise à jour de l'affichage
+    }
+
+    private void MoveDownRight()
+    {
+        grid.MoveCharacter(playerCharacter, 1, 1);
+        StateHasChanged(); // Force la mise à jour de l'affichage
+    }
+
+    private void MoveDownLeft()
+    {
+        grid.MoveCharacter(playerCharacter, -1, 1);
+        StateHasChanged(); // Force la mise à jour de l'affichage
+    }
+
+    private void MoveLeft()
+    {
+        grid.MoveCharacter(playerCharacter, -1, 0);
+        StateHasChanged(); // Force la mise à jour de l'affichage
+    }
+
+    private void MoveRight()
+    {
+        grid.MoveCharacter(playerCharacter, 1, 0);
+        StateHasChanged(); // Force la mise à jour de l'affichage
+    }
+}
