@@ -1,0 +1,47 @@
+﻿@using NewJediwar.Shared;
+<div class="character-tooltip-container">
+    <span class="tooltip-content">@Character.Name</span>
+    @ChildContent
+</div>
+
+<style>
+    .character-tooltip-container {
+        display: inline-block;
+        cursor: help;
+    }
+
+    .tooltip-content {
+        visibility: hidden;
+        position: absolute;
+        width: 120px;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -60px;
+        background-color: #363636;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        z-index: 3;
+    }
+
+        .tooltip-content::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+    .character-tooltip-container:hover span {
+        visibility: visible;
+    }
+</style>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public JediwarCharacter Character { get; set; }
+}

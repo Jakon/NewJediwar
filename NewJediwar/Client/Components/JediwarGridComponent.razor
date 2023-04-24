@@ -1,11 +1,9 @@
 ﻿@using NewJediwar.Shared;
 
 <style>
-    .grid {
+    .map {
         display: grid;
-        grid-template-columns: repeat(@playerCharacter.VisionScope*2 + 2, @($"{grid.CellSize}px"));
-        grid-template-rows: repeat(@playerCharacter.VisionScope*2 + 2, @($"{grid.CellSize}px"));
-        width: fit-content;
+        grid-template-rows: repeat(@($"{playerCharacter.VisionScope * 2 + 2}"), @($"{grid.CellSize}px"));
         width: @($"{grid.CellSize * (playerCharacter.VisionScope * 2 + 2)}px");
         height: @($"{grid.CellSize * (playerCharacter.VisionScope * 2 + 2)}px");
         position: relative;
@@ -26,6 +24,7 @@
         width: @($"{grid.CellSize}px");
         height: @($"{grid.CellSize}px");
         border: 1px solid #ccc;
+        border-right: 1px solid black;
         padding: 0px;
         display: inline-block;
         position: relative;
@@ -42,6 +41,7 @@
         position: absolute;
         top: 0;
         left: 0;
+        z-index: 2;
     }
 
     .rose-des-vents {
@@ -114,6 +114,7 @@
         top: 0;
         right: 0;
     }
+
 </style>
 
 @*<div class="grid-global">
@@ -154,7 +155,7 @@
 
 <h1>La vue joueur</h1>
 
-<div class="grid">
+<div class="map">
     <!-- Ajout de l'en-tête pour les colonnes -->
     <div class="row">
         <div class="cell-header">
@@ -186,7 +187,9 @@
 
                     @if (character != null)
                     {
-                        <img class="character" src="images/jedi.png" alt="@playerCharacter.Name" />
+                        <NewJediwar.Client.Components.CharacterTooltip Character="@character">
+                            <img class="character" src="images/jedi.png" alt="@playerCharacter.Name" />
+                        </NewJediwar.Client.Components.CharacterTooltip>
                     }
 
                 </div>
