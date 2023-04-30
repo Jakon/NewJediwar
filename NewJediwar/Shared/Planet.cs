@@ -1,20 +1,23 @@
 ﻿namespace NewJediwar.Shared
 {
-    public class JediwarGrid
+    public class Planet
     {
         public int Rows { get; set; }
         public int Columns { get; set; }
         public int CellSize { get; set; }
-        public JediwarCell[,] Cells { get; set; }
-        public List<JediwarCharacter> Characters { get; set; }
+        public PlanetGround[,] Cells { get; set; }
+        public List<Character> Characters { get; set; }
 
-        public JediwarGrid(int rows, int columns, int cellSize)
+        public string Name { get; set; }
+
+        public Planet(int rows, int columns, int cellSize, string name)
         {
             Rows = rows;
             Columns = columns;
             CellSize = cellSize;
-            Characters = new List<JediwarCharacter>();
-            Cells = new JediwarCell[Rows, Columns];
+            Characters = new List<Character>();
+            Cells = new PlanetGround[Rows, Columns];
+            Name = name;
         }
 
         //public List<JediwarCell> GetVisibleCells(JediwarCharacter playerCharacter)
@@ -37,7 +40,7 @@
         //    return list;
         //}
 
-        public void MoveCharacter(JediwarCharacter playerCharacter, int rowOffset, int columnOffset)
+        public void MoveCharacter(Character playerCharacter, int rowOffset, int columnOffset)
         {
             // On calcule les nouvelles coordonnées
             var newColumn = (playerCharacter.Column + columnOffset + Columns) % Columns;
@@ -55,7 +58,7 @@
             // On vérifie que la case est praticable.
             var cell = Cells[row, column];
 
-            if(cell.Environnment.IsPracticable)
+            if(cell.GroundEnvironment.IsPracticable)
             {
                 // Si la case est praticable, on vérifie qu'elle n'est pas occupée
                 var isCharacterPresentOnCell = Characters.Any(c => c.Row == row && c.Column == column);

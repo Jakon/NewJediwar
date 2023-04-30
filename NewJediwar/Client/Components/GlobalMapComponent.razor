@@ -1,0 +1,62 @@
+﻿@using NewJediwar.Shared;
+<!--
+Composant d'affichage de la carte entière.
+Elle affiche l'intégralité de la carte sur une seule page
+-->
+
+<h1>La vue Monde</h1>
+
+<h3>@planet.Name</h3>
+
+<style>
+    .global-grid {
+        display: grid;
+        grid-template-rows: repeat(@planet.Rows, 4px);
+        width: fit-content;
+        width: @($"{4 * (planet.Columns)}px");
+        height: @($"{4 * (planet.Rows)}px");
+        position: relative;
+    }
+
+    .global-cell {
+        width: 4px;
+        height: 4px;
+        padding: 0px;
+        display: inline-block;
+        position: relative;
+    }
+</style>
+
+<div class="global-grid">
+
+    @for (int row = 0; row < planet.Rows; row++)
+    {
+        <div class="row">
+            @for (int col = 0; col < planet.Columns; col++)
+            {
+                var character = planet.Characters.FirstOrDefault(c => c.Column == col && c.Row == row);
+
+                @if (character != null)
+                {
+                    <div class="global-cell" style="background-color: @character.GetFactionColorHex()"></div>
+                }
+                else
+                {
+                    <div class="global-cell" style="background-color: @planet.Cells[row,col].GetGroundColorHex()"></div>
+                }
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private Planet planet;
+
+    protected override void OnInitialized()
+    {
+        planet = new Planet(20, 20, 75, "Planète Test");
+
+        InitGame.InitGrid(planet);
+        planet.Characters.Add(new Character("Jakon67", 3, 1, 4));
+    }
+}

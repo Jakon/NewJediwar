@@ -1,12 +1,12 @@
 ﻿namespace NewJediwar.Shared
 {
-    public class JediwarPower
+    public class CharacterPower
     {
         public string Name { get; set; }
         public int Range { get; set; }
         public int Damage { get; set; }
 
-        public JediwarPower(string name, int range, int damage)
+        public CharacterPower(string name, int range, int damage)
         {
             Name = name;
             Range = range;
