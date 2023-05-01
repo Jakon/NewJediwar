@@ -3,33 +3,52 @@
 <style>
     .map {
         display: grid;
-        grid-template-rows: repeat(@($"{playerCharacter.VisionScope * 2 + 2}"), @($"{planet.CellSize}px"));
-        width: @($"{planet.CellSize * (playerCharacter.VisionScope * 2 + 2)}px");
-        height: @($"{planet.CellSize * (playerCharacter.VisionScope * 2 + 2)}px");
+        grid-template-rows: repeat(@($"{playerCharacter.VisionScope * 2 + 2}"), @($"{planet.CellSize + 1}px"));
+        width: @($"{(planet.CellSize + 1) * (playerCharacter.VisionScope * 2 + 2) + 2}px");
+        height: @($"{(planet.CellSize + 1) * (playerCharacter.VisionScope * 2 + 2) + 2}px");
         position: relative;
+        margin-right: 20px;
     }
 
-    .cell {
-        width: @($"{planet.CellSize}px");
-        height: @($"{planet.CellSize}px");
-        border: 1px solid #ccc;
+    .map-top-left-header {
+        background-color: #c0c0c0;
+        width: @($"{planet.CellSize + 1}px");
+        height: @($"{planet.CellSize + 1}px");
+        border: 1px solid black;
+    }
+
+    .map-column-header {
+        background-color: #f0f0f0;
+        width: @($"{planet.CellSize + 1}px");
+        height: @($"{planet.CellSize + 1}px");
+        border-bottom: 1px solid black;
         border-right: 1px solid black;
+        border-left: 1px solid black;
+    }
+
+    .map-row-header {
+        background-color: #f0f0f0;
+        width: @($"{planet.CellSize + 1}px");
+        height: @($"{planet.CellSize + 1}px");
+        border-right: 1px solid black;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    .ground {
+        width: @($"{planet.CellSize + 1}px");
+        height: @($"{planet.CellSize + 1}px");
         padding: 0px;
         display: inline-block;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
         position: relative;
-    }
-
-    .cell-header {
-        background-color: #f1f1f1;
-        width: @($"{planet.CellSize}px");
-        height: @($"{planet.CellSize}px");
-        border: 1px solid #ccc;
     }
 
     .character {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 0px;
+        left: 0px;
         z-index: 2;
     }
 
@@ -49,8 +68,8 @@
         position: absolute;
         cursor: pointer;
         user-select: none;
-        color: #ff5722; /* Couleur vive */
-        /* color: #8b4513; */ /* Couleur neutre */
+        /*color: #ff5722;*/ /* Couleur vive */
+        color: #8b4513; /* Couleur neutre */
         font-size: 3rem;
     }
 
@@ -101,24 +120,26 @@
 
     .cell-x {
         top: 0;
-        right: 0;
+        left: 0;
     }
 
 </style>
 
 <h1>La vue joueur</h1>
 
+
+
 <div class="map">
     <!-- Ajout de l'en-tête pour les colonnes -->
     <div class="row">
-        <div class="cell-header">
+        <div class="map-top-left-header">
             <div class="cell-x">x</div>
             <div class="cell-y">y</div>
         </div>
         @for (int colHeader = -playerCharacter.VisionScope; colHeader <= playerCharacter.VisionScope; colHeader++)
         {
             var xRelatif = (playerCharacter.Column + colHeader + planet.Columns) % planet.Columns;
-            <div class="cell-header">x=@xRelatif</div>
+            <div class="map-row-header">x=@xRelatif</div>
         }
     </div>
 
@@ -128,14 +149,14 @@
 
         <!-- Ajout de l'en-tête pour les lignes -->
         <div class="row">
-            <div class="cell-header">y=@rowRelatif</div>
+            <div class="map-column-header">y=@rowRelatif</div>
 
             @for (int col = -playerCharacter.VisionScope; col <= playerCharacter.VisionScope; col++)
             {
                 var colonneRelatif = (playerCharacter.Column + col + planet.Columns) % planet.Columns;
 
                 var character = planet.Characters.FirstOrDefault(c => c.Column == colonneRelatif && c.Row == rowRelatif);
-                <div class="cell">
+                <div class="ground">
                     <img src="@GetImageSource(planet.Cells[rowRelatif, colonneRelatif])" alt="@planet.Cells[rowRelatif, colonneRelatif].GroundEnvironment.Name" />
 
                     @if (character != null)
@@ -144,7 +165,6 @@
                             <img class="character" src="images/jedi.png" alt="@playerCharacter.Name" />
                         </NewJediwar.Client.Components.CharacterTooltip>
                     }
-
                 </div>
             }
         </div>
