@@ -1,4 +1,4 @@
-﻿namespace NewJediwar.Shared
+﻿namespace NewJediwar.Shared.Entities
 {
     public class Planet
     {
@@ -58,12 +58,12 @@
             // On vérifie que la case est praticable.
             var cell = Cells[row, column];
 
-            if(cell.GroundEnvironment.IsPracticable)
+            if (cell.GroundEnvironment.IsPracticable)
             {
                 // Si la case est praticable, on vérifie qu'elle n'est pas occupée
                 var isCharacterPresentOnCell = Characters.Any(c => c.Row == row && c.Column == column);
 
-                if(!isCharacterPresentOnCell)
+                if (!isCharacterPresentOnCell)
                 {
                     // On vérifie qu'il s'il y a une construction
                     return true;

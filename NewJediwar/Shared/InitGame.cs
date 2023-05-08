@@ -1,4 +1,6 @@
-﻿namespace NewJediwar.Shared
+﻿using NewJediwar.Shared.Entities;
+
+namespace NewJediwar.Shared
 {
     public static class InitGame
     {

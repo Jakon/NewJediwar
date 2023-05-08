@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject IPlayerService PlayerService
+@inject NavigationManager NavigationManager
 
 <div class="page">
     <div class="sidebar">
@@ -7,6 +9,17 @@
 
     <main>
         <div class="top-row px-4">
+            @if (LoggedIn)
+            {
+                <NavLink href="" Match="NavLinkMatch.All" class="nav-item nav-link">Home</NavLink>
+                <NavLink href="users" class="nav-item nav-link">Users</NavLink>
+                <NavLink href="account/logout" class="nav-item nav-link">Logout</NavLink>
+            }
+            else
+            {
+                <NavLink href="account/register" class="nav-item nav-link">Register</NavLink>
+                <NavLink href="account/login" class="nav-item nav-link">Login</NavLink>
+            }
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
@@ -15,3 +28,10 @@
         </article>
     </main>
 </div>
+
+@code {
+    public bool LoggedIn
+    {
+        get { return PlayerService.Player != null; }
+    }
+}

@@ -1,4 +1,7 @@
-using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
+using NewJediwar.Server.Helpers;
+using NewJediwar.Server.Middlewares.Jwt;
+using NewJediwar.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddDbContext<DataContext>();
+
+builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddScoped<IJwtUtils, JwtUtils>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
 
 var app = builder.Build();
 
@@ -21,6 +31,12 @@ else
     app.UseHsts();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var dataContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+    dataContext.Database.Migrate();
+}
+
 app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
@@ -28,6 +44,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseMiddleware<JwtMiddleware>();
 
 app.MapRazorPages();
 app.MapControllers();

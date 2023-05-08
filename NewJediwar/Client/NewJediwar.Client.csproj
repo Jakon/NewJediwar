@@ -21,4 +21,8 @@
     <None Include="wwwroot\images\terre.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Account\" />
+  </ItemGroup>
+
 </Project>

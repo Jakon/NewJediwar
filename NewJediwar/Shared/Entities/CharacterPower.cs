@@ -1,4 +1,4 @@
-﻿namespace NewJediwar.Shared
+﻿namespace NewJediwar.Shared.Entities
 {
     public class CharacterPower
     {
