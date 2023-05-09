@@ -1,0 +1,54 @@
+﻿<h3>PlanetEditorComponent</h3>
+
+<div class="card">
+    <h4 class="card-header">Informations de la planète</h4>
+    <div class="card-body">
+        <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <label>Name</label>
+                <InputText @bind-Value="model.Name" class="form-control" />
+                <ValidationMessage For="@(() => model.Name)" />
+            </div>
+            <div class="form-group">
+                <label>Columns</label>
+                <InputNumber @bind-Value="model.Columns" class="form-control" />
+                <ValidationMessage For="@(() => model.Columns)" />
+            </div>
+
+            <div class="form-group">
+                <label>Rows</label>
+                <InputNumber @bind-Value="model.Rows" class="form-control" />
+                <ValidationMessage For="@(() => model.Columns)" />
+            </div>
+            @*<button disabled="@loading" class="btn btn-primary">
+                @if (loading)
+                {
+                    <span class="spinner-border spinner-border-sm mr-1"></span>
+                }
+                Register
+            </button>
+            <NavLink href="account/login" class="btn btn-link">Cancel</NavLink>*@
+        </EditForm>
+    </div>
+</div>
+
+
+@code {
+    private Planete model = new Planete();
+    private bool loading;
+
+    private void OnValidSubmit()
+    {
+        Console.WriteLine("Coucou");
+    }
+
+    public class Planete
+    {
+        public string Name { get; set; }
+
+        public int Columns { get; set; }
+        
+        public int Rows { get; set; }
+    }
+}

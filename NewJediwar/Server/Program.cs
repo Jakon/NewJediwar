@@ -15,7 +15,9 @@ builder.Services.AddDbContext<DataContext>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
+
 builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<IPlanetService, PlanetService>();
 
 var app = builder.Build();
 

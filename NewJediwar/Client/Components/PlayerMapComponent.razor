@@ -155,7 +155,7 @@
 
                 var character = planet.Characters.FirstOrDefault(c => c.Column == colonneRelatif && c.Row == rowRelatif);
                 <div class="ground">
-                    <img src="@GetImageSource(planet.Cells[rowRelatif, colonneRelatif])" alt="@planet.Cells[rowRelatif, colonneRelatif].GroundEnvironment.Name" />
+                    <img src="@GetImageSource(planet.Cells.GetPlanetGround(rowRelatif, colonneRelatif))" alt="@planet.Cells.GetPlanetGround(rowRelatif, colonneRelatif).GroundEnvironment.Name" />
 
                     @if (character != null)
                     {

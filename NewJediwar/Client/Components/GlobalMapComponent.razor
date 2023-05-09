@@ -41,7 +41,7 @@ Elle affiche l'intégralité de la carte sur une seule page
                 }
                 else
                 {
-                    <div class="ground-global" style="background-color: @planet.Cells[row,col].GetGroundColorHex()"></div>
+                    <div class="ground-global" style="background-color: @planet.Cells.GetPlanetGround(row,col).GetGroundColorHex()"></div>
                 }
             }
         </div>

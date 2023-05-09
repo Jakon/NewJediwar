@@ -1,31 +1,31 @@
-﻿@page "/users"
+﻿@page "/planets"
 @attribute [Authorize]
-@inject IPlayerService PlayerService
+@inject IPlanetService PlanetService;
 
-<h1>Users</h1>
-<NavLink href="users/add" class="btn btn-sm btn-success mb-2">Add User</NavLink>
+<h3>Liste des planètes</h3>
+
 <table class="table table-striped">
     <thead>
-        <tr>            
-            <th style="width: 20%">Login</th>
-            <th style="width: 20%">Name</th>
+        <tr>
+            <th style="width: 20%">Lignes</th>
+            <th style="width: 20%">Colonnes</th>
             <th style="width: 20%">Created At</th>
             <th style="width: 20%">Updated At</th>
             <th style="width: 20%"></th>
         </tr>
     </thead>
     <tbody>
-        @if (players != null)
+        @if (planets != null)
         {
-            foreach (var player in players)
+            foreach (var planet in planets)
             {
                 <tr>
-                    <td>@player.Login</td>
-                    <td>@player.Name</td>
-                    <td>@player.CreatedAt</td>
-                    <td>@player.UpdatedAt</td>
+                    <td>@planet.Rows</td>
+                    <td>@planet.Columns</td>
+                    <td>@planet.CreatedAt</td>
+                    <td>@planet.UpdatedAt</td>
                     <td style="white-space: nowrap">
-                        <NavLink href="@($"users/edit/{player.Id}")" class="btn btn-sm btn-primary mr-1">Edit</NavLink>
+                        <NavLink href="@($"planets/edit/{planet.Id}")" class="btn btn-sm btn-primary mr-1">Edit</NavLink>
                         @*<button @onclick="@(() => DeleteUser(user.Id))" disabled="@user.IsDeleting" class="btn btn-sm btn-danger btn-delete-user">
                 @if (user.IsDeleting)
                 {
@@ -53,21 +53,12 @@
 
 @code {
     private bool loading;
-    private IList<Player> players;
+    private IList<Planet> planets;
 
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-        players = await PlayerService.GetAll();
+        planets = await PlanetService.GetAll();
         loading = false;
-    }
-
-    private async void DeleteUser(string id)
-    {
-        var user = players.First(x => x.Id.ToString() == id);
-        //user.IsDeleting = true;
-        await PlayerService.Delete(id);
-        players.Remove(user);
-        StateHasChanged();
     }
 }

@@ -1,11 +1,25 @@
-﻿namespace NewJediwar.Shared.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+
+namespace NewJediwar.Shared.Entities
 {
-    public class Planet
+    public class Planet : IModelBase
     {
+        [ReadOnly(true), Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+
+        [ReadOnly(true)]
+        public DateTime CreatedAt { get; set; }
+
+        [ReadOnly(true)]
+        public DateTime UpdatedAt { get; set; }
         public int Rows { get; set; }
         public int Columns { get; set; }
         public int CellSize { get; set; }
-        public PlanetGround[,] Cells { get; set; }
+
+        
+        public List<PlanetGround> Cells { get; set; } = new List<PlanetGround>();
         public List<Character> Characters { get; set; }
 
         public string Name { get; set; }
@@ -16,29 +30,8 @@
             Columns = columns;
             CellSize = cellSize;
             Characters = new List<Character>();
-            Cells = new PlanetGround[Rows, Columns];
             Name = name;
         }
-
-        //public List<JediwarCell> GetVisibleCells(JediwarCharacter playerCharacter)
-        //{
-        //    var list = new List<JediwarCell>();
-
-        //    // L'idée, c'est de calculer à l'aide d'une division euclidienne les coordonnées des cases addjacentes. 
-        //    // On va de -Vision à +Vision
-        //    for (var col = -playerCharacter.VisionScope; col <= playerCharacter.VisionScope; col++)
-        //    {
-        //        for (var row = -playerCharacter.VisionScope; row <= playerCharacter.VisionScope; row++)
-        //        {
-        //            var colRelatif = (playerCharacter.Column + col + Columns) % Columns;
-        //            var rowRelatif = (playerCharacter.Row + row + Rows) % Rows;
-
-        //            list.Add(Cells[rowRelatif, colRelatif]);
-        //        }
-        //    }
-
-        //    return list;
-        //}
 
         public void MoveCharacter(Character playerCharacter, int rowOffset, int columnOffset)
         {
@@ -56,7 +49,7 @@
         private bool CanMove(int row, int column)
         {
             // On vérifie que la case est praticable.
-            var cell = Cells[row, column];
+            var cell = Cells.GetPlanetGround(row, column);
 
             if (cell.GroundEnvironment.IsPracticable)
             {
